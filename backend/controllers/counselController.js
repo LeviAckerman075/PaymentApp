@@ -1,5 +1,3 @@
-const counselModel = require('../models/counselModel');
-
 module.exports = {
     async getCounsels(req, res) {
         try {
@@ -41,5 +39,6 @@ module.exports = {
                 msg: error
             });
         }
-    }
+    },
 }
+

@@ -1,1 +1,7 @@
-<p>sign-in works!</p>
+<div class="bodypart">
+    <p>sign-in works!</p>
+    <a routerLink="">go back</a>
+    <br><br>
+    <input [(ngModel)]="phoneNumber" name="phoneNumber" id="phoneNumber" pattern="[0-9]{10}" placeholder="Enter your phone number" required (keyup.enter)="sendOtp()">
+    {{phoneNumber}}
+</div>
