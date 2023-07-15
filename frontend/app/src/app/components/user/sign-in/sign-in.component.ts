@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { HttpService } from '../../../services/http.service';
 import firebase from 'firebase/compat/app';
 import "firebase/compat/auth";
 import {Router} from '@angular/router';
 import { environment } from 'src/environment';
+import { OtpHandlerService } from 'src/app/services/otp-handler.service';
+import { PhoneNumberHandlerService } from 'src/app/services/phone-number-handler.service';
 @Component({
   selector: 'app-sign-in',
   templateUrl: './sign-in.component.html',
@@ -11,25 +12,25 @@ import { environment } from 'src/environment';
 })
 export class SignInComponent {
   phoneNumber: string = '';
-  reCaptchaVerifier: any;
+  // reCaptchaVerifier: any;
   constructor(
-    private httpService: HttpService,
-    private router: Router
+    private otpHandler: OtpHandlerService,
+    private router: Router,
+    private phoneNumberHandler: PhoneNumberHandlerService
   ) {}
   ngOnInit(){
     firebase.initializeApp(environment.firebaseConfig);
   }
   sendOtp() {
-    this.reCaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+    const reCaptchaVerifier = new firebase.auth.RecaptchaVerifier(
       'sign-in-button', {size: 'invisible'}
     );
     firebase.auth().signInWithPhoneNumber(
       this.phoneNumber,
-      this.reCaptchaVerifier
+      reCaptchaVerifier
     ).then((val)=>{
-      localStorage.setItem('verificationId', JSON.stringify(
-        val.verificationId
-      ));
+      this.phoneNumberHandler.setNumber(this.phoneNumber);
+      this.otpHandler.setId(this.phoneNumber, val.verificationId);
       this.router.navigate(['/otpVerify']);
     }).catch((error)=>{
       alert(error.message);
@@ -39,5 +40,4 @@ export class SignInComponent {
     })
     this.phoneNumber = '';
   }
-  
 }

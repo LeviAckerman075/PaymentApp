@@ -13,9 +13,7 @@ app.use(cors());
 const counselRoutes = require('./routes/counselRoutes');
 app.use('/counsel', counselRoutes);
 
-const otpRoutes = require('./routes/otpRoutes');
-app.use('/otp', otpRoutes);
-
-
+const userRoutes = require('./routes/userRoutes');
+app.use('/user', userRoutes);
 
 app.listen(process.env.PORT);
