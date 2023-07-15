@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import firebase from 'firebase/compat/app';
 import "firebase/compat/auth";
-import {Router} from '@angular/router';
+import {Router, NavigationExtras } from '@angular/router';
+import { OtpHandlerService } from 'src/app/services/otp-handler.service';
 @Component({
   selector: 'app-otp-verification',
   templateUrl: './otp-verification.component.html',
@@ -10,22 +11,13 @@ import {Router} from '@angular/router';
 export class OtpVerificationComponent {
   otp: string = '';
   verify: string = '';
-  constructor(private router: Router){}
+  constructor(
+    private router: Router,
+    private otpHandler: OtpHandlerService
+  ){}
   ngOnInit(){
-    this.verify = JSON.parse(localStorage.getItem('verificationId') || '{}');
+    this.verify = this.otpHandler.getId();
   }
-  otpConfig={
-    allowNumbersOnly: true,
-    length: 6,
-    isPasswordInput: false,
-    disableAutoFocus: false,
-    placeholder: '',
-    inputStyles: {
-      width: '50px',
-      height: '50px'
-    }
-  };
-
   verifyOtp(){
     var credentials = firebase.auth.PhoneAuthProvider.credential(
       this.verify,
@@ -35,6 +27,5 @@ export class OtpVerificationComponent {
       console.log(res);
       this.router.navigate(['/userHome']);
     });
-
   }
 }
